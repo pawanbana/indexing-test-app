@@ -1,0 +1,11 @@
+{
+  "name": "indexing-test-app",
+  "version": "1.0.0",
+  "description": "used to test indexing on email for god service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
