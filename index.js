@@ -37,6 +37,10 @@ app.post('/createtable', (req, res) => {
 });
 
 
+app.get('/', (req, res) => {
+    return res.send('success');
+});
+
 app.post("/query",(req,res)=>{
     const query = req.body;
     const connection = mysql.createConnection({
