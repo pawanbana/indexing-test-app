@@ -17,7 +17,7 @@ app.use(bodyParser.text());
 // post route to create a table with given sql schema.
 app.post('/createtable', (req, res) => {
     const query = req.body;
-    if ( ( query.split(" ")[0].toLowerCase() !== 'create') && (query.split(" ")[1].toLowerCase() !== 'table')) {
+    if ( ( query.split(" ")[0].toLowerCase() !== 'create') || (query.split(" ")[1].toLowerCase() !== 'table')) {
         return res.send("you can only create a table here. ");
     }
 
