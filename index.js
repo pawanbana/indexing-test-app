@@ -5,12 +5,6 @@ const mysql = require('mysql');
 const _ = require('lodash');
 const async =require('async');
 const bodyParser = require('body-parser');
-const connection = mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_USER_PASSWORD || '',
-    database: process.env.DB_NAME || 'god_service'
-});
 const generateData = require('./generatefunction');
 const { performance } = require('perf_hooks');
 
@@ -26,6 +20,14 @@ app.post('/createtable', (req, res) => {
     if ( ( query.split(" ")[0].toLowerCase() !== 'create') && (query.split(" ")[1].toLowerCase() !== 'table')) {
         return res.send("you can only create a table here. ");
     }
+
+    const connection = mysql.createConnection({
+        host: process.env.DB_WRITER_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_USER_PASSWORD || '',
+        database: process.env.DB_NAME || 'god_service'
+    });
+
     connection.query(query, (err, rows, fields) => {
         if (err) {
             return res.send(err);
@@ -37,6 +39,12 @@ app.post('/createtable', (req, res) => {
 
 app.post("/query",(req,res)=>{
     const query = req.body;
+    const connection = mysql.createConnection({
+        host: process.env.DB_READER_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_USER_PASSWORD || '',
+        database: process.env.DB_NAME || 'god_service'
+    });
     let startQuery, endQuery;
 
     startQuery = performance.now();
@@ -57,6 +65,13 @@ app.post("/query",(req,res)=>{
   //post route to create a fake data on a given table.
 
 app.post("/generatedata/:tablename/:limit", (req,res)=>{
+    const connection = mysql.createConnection({
+        host: process.env.DB_WRITER_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_USER_PASSWORD || '',
+        database: process.env.DB_NAME || 'god_service'
+    });
+
     let tablename =req.params.tablename;
     let limit = parseInt(req.params.limit);
     let fields= [];
@@ -92,15 +107,9 @@ app.post("/generatedata/:tablename/:limit", (req,res)=>{
                }
                connection.query(sqlquery, [dataset], (err)=>{
                    if(err){ return next(err);}
-
-                   console.log('the operation is done');
-
                    return next(null);
                });
             }, function (err) {
-                console.log('======================');
-                console.log('finally done');
-                console.log('======================');
                 return cb(err);
             });
         }
