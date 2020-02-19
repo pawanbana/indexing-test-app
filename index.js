@@ -43,6 +43,7 @@ app.get('/', (req, res) => {
 
 app.post("/query",(req,res)=>{
     const query = req.body;
+    const entry = req.query.entry;
     const connection = mysql.createConnection({
         host: process.env.DB_READER_HOST || 'localhost',
         user: process.env.DB_USER || 'root',
@@ -60,7 +61,7 @@ app.post("/query",(req,res)=>{
             status: 'success',
             QueryExecutionTime: endQuery - startQuery,
             length: rows && rows.length,
-            entries: rows
+            entries: entry === 'true' ? rows : 'yay too much data'
         });
     });
   });
