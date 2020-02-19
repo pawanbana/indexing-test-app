@@ -7,6 +7,12 @@ const async =require('async');
 const bodyParser = require('body-parser');
 const generateData = require('./generatefunction');
 const { performance } = require('perf_hooks');
+const readerConnection = mysql.createConnection({
+    host: process.env.DB_READER_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_USER_PASSWORD || '',
+    database: process.env.DB_NAME || 'god_service'
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -44,16 +50,10 @@ app.get('/', (req, res) => {
 app.post("/query",(req,res)=>{
     const query = req.body;
     const entry = req.query.entry;
-    const connection = mysql.createConnection({
-        host: process.env.DB_READER_HOST || 'localhost',
-        user: process.env.DB_USER || 'root',
-        password: process.env.DB_USER_PASSWORD || '',
-        database: process.env.DB_NAME || 'god_service'
-    });
     let startQuery, endQuery;
 
     startQuery = performance.now();
-    connection.query(query,(err,rows)=>{
+    readerConnection.query(query,(err,rows)=>{
         endQuery = performance.now();
         if(err){return res.send(err);}
 
