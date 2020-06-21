@@ -19,7 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.text());
 
 
-
 // post route to create a table with given sql schema.
 app.post('/createtable', (req, res) => {
     const query = req.body;
